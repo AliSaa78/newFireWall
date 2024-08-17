@@ -7,7 +7,7 @@ const invController = {
     try {
       const newInvoice = new Invoice(req.body);
       await newInvoice.save();
-      res.status(201).send(newInvoice); // 201 Created for successful creation
+      res.status(201).json(newInvoice); // 201 Created for successful creation
     } catch (error) {
       res.status(400).send(error); // 400 Bad Request for errors
     }
@@ -17,7 +17,7 @@ const invController = {
   readAll: async (req, res) => {
     try {
       const allInvoices = await Invoice.find({});
-      res.status(200).send(allInvoices); // 200 OK for successful retrieval
+      res.status(200).json(allInvoices); // 200 OK for successful retrieval
     } catch (error) {
       res.status(400).send(error);
     }
@@ -30,7 +30,7 @@ const invController = {
       if (!getInvoice) {
         return res.status(404).send(); // 404 Not Found if no invoice is found
       }
-      res.status(200).send(getInvoice);
+      res.status(200).json(getInvoice);
     } catch (error) {
       res.status(400).send(error);
     }
@@ -46,7 +46,7 @@ const invController = {
       if (!updatedInvoice) {
         return res.status(404).send(); // 404 Not Found if invoice not found
       }
-      res.status(200).send(updatedInvoice); 
+      res.status(200).json(updatedInvoice); 
     } catch (error) {
       res.status(400).send(error);
     }
@@ -59,7 +59,7 @@ const invController = {
       if (!deletedInvoice) {
         return res.status(404).send(); 
       }
-      res.status(200).send(deletedInvoice);
+      res.status(200).json(deletedInvoice);
     } catch (error) {
       res.status(400).send(error);
     }
