@@ -2,14 +2,6 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 
 const userSchema = new mongoose.Schema({
-<<<<<<< HEAD
-  username: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  role: { type: String, required: true  }
-});
-
-
-=======
   username: { type: String, required: true},
   password: { type: String, required: true },
   role: { type: String, required: true, enum: ['user', 'admin' , 'doctor', 'Pharmacist'], default: 'user' }
@@ -26,12 +18,8 @@ userSchema.pre('save', async function(next) {
       return next(error);
     }
 });
->>>>>>> ali_waleed
 
 const User = mongoose.model('User', userSchema);
 
 export default User;
-<<<<<<< HEAD
-=======
   
->>>>>>> ali_waleed
