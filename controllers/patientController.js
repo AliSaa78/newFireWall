@@ -7,7 +7,7 @@ const patientController = {
     try {
       const patient = new Patient(req.body);
       await patient.save();
-      res.status(201).send(patient);
+      res.status(201).json(patient);
     } catch (error) {
       res.status(400).send(error);
     }
@@ -17,7 +17,7 @@ const patientController = {
   readAllPatients: async (req, res) => {
     try {
       const patients = await Patient.find({});
-      res.status(200).send(patients);
+      res.status(200).json(patients);
     } catch (error) {
       res.status(500).send(error);
     }
@@ -30,7 +30,7 @@ const patientController = {
       if (!patient) {
         return res.status(404).send();
       }
-      res.status(200).send(patient);
+      res.status(200).json(patient);
     } catch (error) {
       res.status(500).send(error);
     }
@@ -43,7 +43,7 @@ const patientController = {
       if (!patient) {
         return res.status(404).send();
       }
-      res.status(200).send(patient);
+      res.status(200).json(patient);
     } catch (error) {
       res.status(400).send(error);
     }
@@ -56,7 +56,7 @@ const patientController = {
       if (!patient) {
         return res.status(404).send();
       }
-      res.status(200).send(patient);
+      res.status(200).json(patient);
     } catch (error) {
       res.status(500).send(error);
     }

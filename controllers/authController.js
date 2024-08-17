@@ -126,7 +126,7 @@ updateUser:async(req,res,next)=>{
       if (!updatedInvoice) {
         return res.status(404).send(); // 404 Not Found if invoice not found
       }
-      res.status(200).send(updatedInvoice); 
+      res.status(200).json(updatedInvoice); 
     } catch (error) {
       res.status(400).send(error);
     }
