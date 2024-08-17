@@ -9,7 +9,11 @@ router.post('/patients', patientController.createPatient);
 // Read all patients
 router.get('/patients', patientController.readAllPatients);
 
+<<<<<<< HEAD
 // find a patient by ID
+=======
+// Read a patient by ID
+>>>>>>> ali_waleed
 router.get('/patients/:id', patientController.readPatientById);
 
 // Update a patient by ID
