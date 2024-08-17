@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import User from '../models/user.js';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
-import Blacklist from '../models/balcklist.js'
+import Blacklist from '../models/balckList.js'
 
 
 dotenv.config();
