@@ -10,7 +10,7 @@ const port = process.env.PORT || 4000;
   try {
   await mongoose.connect(process.env.DATABASE_URL);
 } catch (error) {
-  handleError(error);
+  console.log(error);
 }
 
 // Start the server
