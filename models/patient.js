@@ -43,7 +43,9 @@ const PatientSchema = new Schema({
         type: Boolean, 
         required: true
     },
-  
+    imagePath: { type: String ,
+        required:true
+    } 
 });
 
 const Patient = mongoose.model('Patient', PatientSchema);

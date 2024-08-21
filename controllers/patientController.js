@@ -5,9 +5,15 @@ const patientController = {
   // Create a new patient
   createPatient: async (req, res) => {
     try {
-      const patient = new Patient(req.body);
-      await patient.save();
-      res.status(201).json(patient);
+      if (!req.file) {
+        return res.status(400).send({ error: 'File upload failed' });
+      }
+      const newPatient = new Patient({
+        ...req.body,
+        imagePath: req.file.path // Store the image path in the schema
+    });
+      await newPatient.save();
+      res.status(201).json(newPatient);
     } catch (error) {
       res.status(400).send(error);
     }
