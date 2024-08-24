@@ -11,7 +11,7 @@ required : true
 creationDate:{
     type: Date,
     default: Date.now()
-},
+}, 
 notes:{
     type : String,
     required:false

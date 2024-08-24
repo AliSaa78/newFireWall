@@ -6,7 +6,8 @@ const patientController = {
   //Create QR image 
   createQr : async (req,res)=>{
   try {
-    const url = `https://4000/patient/profile/${req.query.id}`;
+
+    const url = `localhost:3000/patient-profile/${req.query.id}`;
     const qrCodeImage = await QRCode.toDataURL(url);
     res.setHeader('Content-Type', 'image/png');
 

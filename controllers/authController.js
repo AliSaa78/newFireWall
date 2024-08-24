@@ -30,6 +30,7 @@ registerUser: async (req, res) => {
   } catch (error) {
     console.error('Error registering user:', error);
     res.status(400).send('Error registering user');
+
   }
 }
 

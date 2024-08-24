@@ -17,8 +17,19 @@ const storage = multer.diskStorage({
     }
 });
 
-// Initialize multer with the storage engine
-const upload = multer({ storage: storage });
+// const fileFilter = (req, file, cb) => {
+//   if (file.mimetype === 'image/png' || file.mimetype === 'application/pdf') {
+//     cb(null, true);
+//   } else {
+//     cb(new Error('Unsupported file type'), false);
+//   }
+// };
+
+
+// Initialize multer
+const upload = multer({ storage: storage ,
+    limits: { fileSize: 1024 * 1024 * 2 }
+});
 
 // POST route to handle image upload and patient creation
 router.post('/patients', upload.single('picture'), patientController.createPatient);
