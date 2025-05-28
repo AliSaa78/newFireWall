@@ -11,7 +11,7 @@ app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 app.use('/api', patientRoutes); 
 app.use('/api', invRouter); 
-app.use('/api', authRoutes); 
+app.use('/api/user', authRoutes); 
 app.use(PrescriptionRoutes);
 app.use(qrRoute);
 

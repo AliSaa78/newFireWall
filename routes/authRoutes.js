@@ -1,5 +1,6 @@
 import express from 'express';
 import authController from '../controllers/authController.js';
+import authRolee from '../controllers/authRole.js';
 
 const router = express.Router();
 
@@ -22,10 +23,12 @@ router.get('/user/:id', authController.fetchSingleUser);
 router.put('/updateUsers/:id', authController.updateUser);
 
 // Delete a user by ID
-router.delete('/deletUsers/:id', authController.deleteUser);
-
+router.delete('/deletUsers/:id', authController.protect, authRolee('admin'), authController.deleteUser);
 
 // getMe Function
 router.get('/getMe',authController.getMe);
+router.post('/sendEmailToReset', authController.sendEmailToReset);
+router.post('/resetPassword',authController.protect, authController.resetPassword );
 
-export default router;
+
+export default router ;

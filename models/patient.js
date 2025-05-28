@@ -41,11 +41,16 @@ const PatientSchema = new Schema({
     },
     memberShip: {
         type: Boolean, 
-        required: true
+        required: true,
+        default : true
     },
     imagePath: { type: String ,
         required:true
-    } 
+    } ,
+    registerDay:{
+        type:Date,
+        default:Date.now()
+    }
 });
 
 const Patient = mongoose.model('Patient', PatientSchema);

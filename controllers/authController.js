@@ -3,18 +3,35 @@ import User from '../models/user.js';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import Blacklist from '../models/blackList.js'
+import nodemailer from 'nodemailer';
 
 
 dotenv.config();
+var transport = nodemailer.createTransport({
+  host: "sandbox.smtp.mailtrap.io",
+  port: 2525,
+  auth: {
+    user: "81a724006977b2",
+    pass: "202583f86cc6f7"
+  }
+});
+let mailOptions = {
+  from: 'alibarmej@gmail.com',         // Sender's email address
+  to: 'aliabsoae@gmail.com',               // Recipient's email address
+  subject: 'Test Email from Nodemailer',     // Subject line
+  text: 'Hello, this is a test email!',      // Plain text body
+  html: '<b>Hello, this is a test email!</b>' // HTML body (optional)
+};
 
-const secretKey = process.env.ACCESS_TOKEN_SECRET;
+
+const secretKey = process.env.SECRET_TOKEN_ACCESS;
 
 const authController = {
 
   // Register a new user
 registerUser: async (req, res) => {
   try {
-    const { username, password, role } = req.body;
+    const { username, password, role ,email} = req.body;
 
     // Check if the username exists
     const usernameExists = await User.findOne({ username });
@@ -22,10 +39,10 @@ registerUser: async (req, res) => {
       return res.status(400).json({ message: "Username already exists" });
     }
 
-    const user = new User({ username, password, role });
+    const user = new User({ username, password, role, email });
     await user.save();
 
-    const token = jwt.sign({name: user.username, id: user._id, role: user.role }, secretKey, { expiresIn: '8h' });
+    const token = jwt.sign({name: user.username, id: user._id, role: user.role ,email:user.email}, secretKey, { expiresIn: '8h' });
     res.json({ token });
   } catch (error) {
     console.error('Error registering user:', error);
@@ -164,9 +181,99 @@ getMe: async (req, res) => {
     console.log(error);
     res.status(400).send('Error');
   }
+},
+protect: async (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization || req.headers.Authorization;
+    if (!authHeader) {
+      return res.status(403).json({ message: "Token is not provided" });
+    }
+
+    const token = authHeader.split(' ')[1]; // Extract the token after "Bearer "
+    if (!token) {
+      return res.status(403).json({ message: "Token is not provided" });
+    }
+
+    jwt.verify(token, secretKey, async (err, decoded) => {
+      if (err) {
+        return res.status(403).json({ message: "Invalid Token" });
+      }
+      console.log(decoded); // Check the decoded payload
+      req.user = await User.findById(decoded.id).select('-password');
+      if (!req.user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      next();
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Error in protect middleware" });
+  }
+},
+
+sendEmailToReset: async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Check if user exists by email
+    const user = await User.findOne({ email : email });
+    if (!user) {
+      return res.status(400).send({ message: "User not found" });
+    }
+
+    // Create JWT token
+    const token = jwt.sign(
+      { name: user.username, id: user._id, role: user.role },
+      secretKey,
+      { expiresIn: '15m' }
+    );
+    console.log(token);
+
+    // Customize the email message with user information and reset link
+    const resetLink = `https://localhost:4000/api/user/reset-password?token=${token}`;
+    let mailOptions = {
+      from: 'alibarmej@gmail.com', 
+      to: email,
+      subject: 'Password Reset Request',
+      html: `<b>Hello ${user.username},</b><br>Click <a href="${resetLink}">here</a> to reset your password.`
+    };
+
+    // Send email using Mailtrap
+    await transport.sendMail(mailOptions);
+
+    // Send token in response if needed (though it's better to handle via email link)
+    res.json({ message: 'Password reset email sent' });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({ message: 'Error sending password reset email' });
+  }
+},
+resetPassword: async (req, res, next) => {
+  try {
+    // Assuming protect middleware sets req.user
+    const { newPassword } = req.body;
+
+    if (!newPassword) {
+      return res.status(400).json({ message: 'New password is required' });
+    }
+
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    res.status(200).json({ message: 'Password reset successfully' });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Error resetting password' });
+  }
 }
 
-  
+
 };
 
 export default authController;

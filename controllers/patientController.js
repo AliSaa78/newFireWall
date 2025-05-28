@@ -12,6 +12,7 @@ const patientController = {
         ...req.body,
         imagePath: req.file.path // Store the image path in the schema
     });
+      req.patient = newPatient;
       await newPatient.save();
       res.status(201).json(newPatient);
     } catch (error) {
@@ -66,7 +67,8 @@ const patientController = {
     } catch (error) {
       res.status(500).send(error);
     }
-  }
+  },
+  
 };
 
 export default patientController;
