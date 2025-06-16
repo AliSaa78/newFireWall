@@ -14,9 +14,9 @@ const app = express();
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 app.use('/api-docs',swaggerUi.serve,swaggerUi.setup(specs));
-app.use('/api', patientRoutes); 
-app.use('/api', invRouter); 
-app.use('/api', authRoutes); 
+app.use('/', patientRoutes); 
+app.use('/', invRouter); 
+app.use('/', authRoutes); 
 app.use(PrescriptionRoutes);
 app.use(qrRoute);
 
